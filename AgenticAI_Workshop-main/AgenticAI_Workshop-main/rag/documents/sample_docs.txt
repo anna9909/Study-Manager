@@ -1,0 +1,78 @@
+Study Companion Educational Knowledge Base
+==========================================
+
+Overview
+--------
+The Study Companion is an intelligent multi-agent system designed to automatically generate comprehensive study materials for any educational topic. It combines AI agents specialized in note-taking, problem-solving, and assessment creation to produce complete study packs that help students learn effectively.
+
+Learning Science Principles
+----------------------------
+Effective study materials should include:
+- Clear, concise notes with key concepts highlighted
+- Practice problems with step-by-step solutions to demonstrate problem-solving techniques  
+- Assessment questions that test understanding at multiple cognitive levels
+- Visual aids and concept maps to show relationships between ideas
+- Learning objectives that guide study efforts
+
+The Study Companion follows evidence-based learning principles:
+1. Spaced repetition - Materials are organized for review over time
+2. Active recall - Practice questions promote active engagement
+3. Elaborative interrogation - Solutions explain the "why" behind each step
+4. Interleaving - Topics are presented with connections to related concepts
+
+Agent Specializations
+----------------------
+Study Manager: Orchestrates the workflow, defines learning objectives, and ensures all materials align with educational goals. Creates the overall structure and learning plan.
+
+Notes Generator: Transforms complex topics into digestible bullet-point notes. Focuses on clarity, uses simple language, and organizes information logically with clear headings.
+
+Example Solver: Creates relevant practice problems and provides detailed step-by-step solutions. Explains reasoning behind each step to teach problem-solving techniques.
+
+Quiz Maker: Designs comprehensive assessments including multiple-choice questions, short answer questions, and detailed answer keys. Tests various cognitive levels from recall to analysis.
+
+Subject Coverage
+----------------
+The system can generate study materials for:
+- STEM subjects (Mathematics, Physics, Chemistry, Biology, Computer Science)
+- Humanities (History, Literature, Philosophy, Languages)
+- Social Sciences (Psychology, Sociology, Economics, Political Science)
+- Professional skills (Programming, Data Analysis, Project Management)
+- Test preparation (SAT, ACT, GRE, certification exams)
+
+Best Practices for Study Pack Creation
+---------------------------------------
+1. Start with clear learning objectives
+2. Break complex topics into manageable chunks
+3. Use consistent formatting and structure
+4. Include definitions for key terms
+5. Provide context and real-world applications
+6. Create problems of varying difficulty
+7. Ensure answer keys explain not just what, but why
+8. Design questions that test understanding, not just memorization
+
+Educational Technology Integration
+-----------------------------------
+The Study Companion uses:
+- Natural Language Processing for content generation
+- Retrieval-Augmented Generation (RAG) for accurate information
+- Web search for current information and examples
+- Computational tools for mathematical problem-solving
+
+Quality Standards
+-----------------
+All generated materials should be:
+- Accurate: Information verified against reliable sources
+- Clear: Written in accessible language appropriate for the level
+- Complete: Covering all essential aspects of the topic  
+- Coherent: Well-organized with logical flow
+- Actionable: Providing practical study guidance
+
+Study Strategies
+----------------
+Effective use of Study Companion materials:
+1. Review notes first to build foundational knowledge
+2. Attempt practice problems independently before checking solutions
+3. Use quizzes to identify knowledge gaps
+4. Create a study schedule based on learning objectives
+5. Revisit difficult concepts using notes and examples
+6. Test yourself regularly with practice questions
