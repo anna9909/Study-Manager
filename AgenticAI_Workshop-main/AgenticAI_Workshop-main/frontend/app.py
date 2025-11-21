@@ -7,9 +7,48 @@ from pathlib import Path
 from datetime import datetime
 
 import streamlit as st
-from dotenv import load_dotenv
 
-# Load environment variables first
+# CRITICAL: Load API key from Streamlit secrets FIRST before any other imports
+def setup_environment():
+    """Setup environment variables from Streamlit secrets before importing other modules."""
+    # Try to get API key from Streamlit secrets and inject into environment
+    try:
+        if hasattr(st, 'secrets') and "OPENROUTER_API_KEY" in st.secrets:
+            os.environ["OPENROUTER_API_KEY"] = st.secrets["OPENROUTER_API_KEY"]
+            return True
+    except Exception:
+        pass
+    
+    # Check if already in environment
+    if os.getenv("OPENROUTER_API_KEY"):
+        return True
+    
+    return False
+
+# Setup environment before any other imports
+if not setup_environment():
+    st.error("❌ **OPENROUTER_API_KEY not found!**")
+    st.info("""
+    **To fix this:**
+    
+    **For Streamlit Cloud:**
+    1. Go to your app settings
+    2. Click "Secrets" tab
+    3. Add this line:
+    ```
+    OPENROUTER_API_KEY = "your-api-key-here"
+    ```
+    
+    **For Local Development:**
+    1. Create a `.env` file in project root
+    2. Add: `OPENROUTER_API_KEY=your-api-key-here`
+    
+    Get your API key from: https://openrouter.ai/keys
+    """)
+    st.stop()
+
+# Now load dotenv (for local development)
+from dotenv import load_dotenv
 load_dotenv()
 
 # Ensure we can import the backend modules
@@ -18,30 +57,6 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
 
 from main import run_pipeline  # noqa: E402
-
-# Validate API key is present
-def get_api_key() -> str:
-    """Get API key from environment or Streamlit secrets."""
-    # Try environment variable first
-    api_key = os.getenv("OPENROUTER_API_KEY", "")
-    if api_key:
-        return api_key
-    
-    # Try Streamlit secrets (for cloud deployment)
-    try:
-        if hasattr(st, 'secrets') and "OPENROUTER_API_KEY" in st.secrets:
-            return st.secrets["OPENROUTER_API_KEY"]
-    except Exception:
-        pass
-    
-    return ""
-
-# Check for API key early
-API_KEY = get_api_key()
-if not API_KEY:
-    st.error("❌ **OPENROUTER_API_KEY not found!**")
-    st.info("Please add your API key to:\n- `.env` file (local) or\n- Streamlit Cloud Secrets (deployment)")
-    st.stop()
 
 st.set_page_config(
     page_title="Study Companion - AI Study Pack Generator",
@@ -75,7 +90,16 @@ st.markdown("""
 
 # Header
 st.markdown('<div class="main-header">📚 Study Companion</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">AI-Powered Educational Material Generator</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-header">AI-Powered Educational Material Generator for Any Subject</div>', unsafe_allow_html=True)
+
+# Info banner
+st.info("""
+🎓 **Works for ALL subjects:** STEM, Humanities, Social Sciences, Programming, Business, Medicine, Law, and more!  
+⚡ **Free to use:** Powered by AI agents using OpenRouter's free tier  
+📦 **Complete study pack:** Notes + Examples + Quizzes + Learning Plan
+""")
+
+st.markdown("---")
 
 # Sidebar configuration
 with st.sidebar:
@@ -211,14 +235,36 @@ if generate_button:
         except Exception as exc:
             progress_bar.empty()
             status_text.empty()
-            st.error(f"❌ Error generating study pack: {exc}")
-            st.markdown("""
-            **Troubleshooting:**
-            - Check your OpenRouter API key in `.env`
-            - Ensure vector store is built: `python rag\\build_vector_db.py`
-            - Verify internet connection
-            - Try a simpler topic
-            """)
+            error_msg = str(exc)
+            
+            # Check if it's an API key error
+            if "401" in error_msg or "User not found" in error_msg:
+                st.error("❌ **API Key Error: Authentication Failed**")
+                st.warning("""
+                **Your OpenRouter API key is invalid or missing.**
+                
+                **To fix this on Streamlit Cloud:**
+                1. Go to your app settings (⋮ menu)
+                2. Click "Secrets" tab
+                3. Add/Update this line:
+                ```
+                OPENROUTER_API_KEY = "your-actual-api-key"
+                ```
+                4. Get your key from: https://openrouter.ai/keys
+                5. Make sure to use the FREE model: `meta-llama/llama-3.3-70b-instruct:free`
+                
+                **For Local Development:**
+                - Create `.env` file with: `OPENROUTER_API_KEY=your-key`
+                """)
+            else:
+                st.error(f"❌ Error generating study pack: {error_msg}")
+                st.markdown("""
+                **Troubleshooting:**
+                - Ensure vector store is built: `python rag\\build_vector_db.py`
+                - Verify internet connection
+                - Try a simpler topic
+                - Check the logs for details
+                """)
 
 # Footer
 st.markdown("---")
