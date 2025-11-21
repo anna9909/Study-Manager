@@ -13,7 +13,7 @@
 
 **Your OpenRouter API Key:**
 ```
-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
+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
 ```
 
 **CRITICAL: Add to Streamlit Cloud Secrets**
@@ -34,7 +34,7 @@ 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
 4. **Paste exactly this (with quotes!):**
 
 ```toml
-OPENROUTER_API_KEY = "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"
+   OPENROUTER_API_KEY = "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"
 ```
 
 5. Click **"Save"**
