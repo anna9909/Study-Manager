@@ -2,11 +2,15 @@
 from __future__ import annotations
 
 import sys
+import os
 from pathlib import Path
 from datetime import datetime
 
 import streamlit as st
 from dotenv import load_dotenv
+
+# Load environment variables first
+load_dotenv()
 
 # Ensure we can import the backend modules
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -15,7 +19,29 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from main import run_pipeline  # noqa: E402
 
-load_dotenv()
+# Validate API key is present
+def get_api_key() -> str:
+    """Get API key from environment or Streamlit secrets."""
+    # Try environment variable first
+    api_key = os.getenv("OPENROUTER_API_KEY", "")
+    if api_key:
+        return api_key
+    
+    # Try Streamlit secrets (for cloud deployment)
+    try:
+        if hasattr(st, 'secrets') and "OPENROUTER_API_KEY" in st.secrets:
+            return st.secrets["OPENROUTER_API_KEY"]
+    except Exception:
+        pass
+    
+    return ""
+
+# Check for API key early
+API_KEY = get_api_key()
+if not API_KEY:
+    st.error("❌ **OPENROUTER_API_KEY not found!**")
+    st.info("Please add your API key to:\n- `.env` file (local) or\n- Streamlit Cloud Secrets (deployment)")
+    st.stop()
 
 st.set_page_config(
     page_title="Study Companion - AI Study Pack Generator",
