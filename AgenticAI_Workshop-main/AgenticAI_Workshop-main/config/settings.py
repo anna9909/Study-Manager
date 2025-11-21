@@ -15,16 +15,34 @@ if TYPE_CHECKING:  # pragma: no cover - typing helpers only
 # Ensure environment variables from a local .env file are available during development.
 load_dotenv()
 
+# Try to load API key from Streamlit secrets if available (for cloud deployment)
+def get_api_key() -> str:
+    """Get API key from environment or Streamlit secrets."""
+    # First try environment variable
+    api_key = os.getenv("OPENROUTER_API_KEY", "")
+    if api_key:
+        return api_key
+    
+    # If not found, try Streamlit secrets (for cloud deployment)
+    try:
+        import streamlit as st
+        if hasattr(st, 'secrets') and "OPENROUTER_API_KEY" in st.secrets:
+            return st.secrets["OPENROUTER_API_KEY"]
+    except (ImportError, Exception):
+        pass
+    
+    return ""
+
 MODEL_NAME = "meta-llama/llama-3.3-70b-instruct:free"
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 OPENROUTER_DEFAULT_HEADERS = {
     "HTTP-Referer": "https://github.com/your-org/agentic-workshop",
-    "X-Title": "Agentic AI Workshop",
+    "X-Title": "Study Companion - AI Educational System",
 }
 
 LLM_CONFIG: Dict[str, object] = {
     "model": MODEL_NAME,
-    "openrouter_api_key": os.getenv("OPENROUTER_API_KEY", ""),
+    "openrouter_api_key": get_api_key(),
     "temperature": 0.2,
     "max_tokens": 800,
 }
